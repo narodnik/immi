@@ -47,6 +47,11 @@ def randomly_sleep():
     print(f"Sleeping {random_value} secs...")
     time.sleep(random_value)
 
+    # 2% of the time, take a toilet break and sleep far longer
+    if random.random() < 0.02:
+        toilet_break = random.random() * 60
+        time.sleep(toilet_break)
+
 # ydotool mousemove --absolute -- 4500 32
 # ydotool click 0xC0
 # ydotool key 107:1 107:0 14:1 14:0 3:1 3:0
