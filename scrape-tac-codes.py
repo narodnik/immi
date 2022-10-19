@@ -1,7 +1,7 @@
 import os, random, time
 
-# Open this URL in firefox
-url = "https://swappa.com/imei/tac?page=1"
+# Open this URL for i=1 in firefox
+url = "https://swappa.com/imei/tac?page=%i"
 number_pages = 605
 
 # Start ydotoold
@@ -56,15 +56,15 @@ def randomly_sleep():
 # ydotool click 0xC0
 # ydotool key 107:1 107:0 14:1 14:0 3:1 3:0
 
-def next_page(previous_page_number, page_number):
+# Make sure to disable browser.urlbar.autoFill in about:config
+def next_page(page_number):
     # move mouse to the location of the URL bar
     move_mouse(4500, 32)
     left_click()
-
-    digits = [keycode_n(int(d)) for d in str(page_number)]
-    backspaces = len(str(previous_page_number)) * [KEY_BACKSPACE]
-
-    press_keys([KEY_END, *backspaces, *digits, KEY_ENTER])
+    ctrl_a()
+    press_keys([KEY_BACKSPACE])
+    type_text(url % page_number)
+    press_keys([KEY_ENTER])
 
 def save_html_page(page_number):
     # make sure you have a folder called 'pages'
@@ -83,17 +83,15 @@ def save_html_page(page_number):
     time.sleep(5)
 
 # For testing
-next_page(3, 4)
+#next_page(4)
 #randomly_sleep()
 #save_html_page(1)
 
-#os.system("rm -fr pages/*")
-#number_pages = 4
+os.system("rm -fr pages/*")
+number_pages = 4
 
-#prev_page = 1
-#for current_page in range(1, number_pages + 1):
-#    next_page(prev_page, current_page)
-#    randomly_sleep()
-#    save_html_page(current_page)
-#    prev_page = current_page
+for current_page in range(1, number_pages + 1):
+    next_page(current_page)
+    randomly_sleep()
+    save_html_page(current_page)
 
