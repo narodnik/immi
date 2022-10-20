@@ -87,8 +87,11 @@ def save_html_page(page_number):
 #randomly_sleep()
 #save_html_page(1)
 
-os.system("rm -fr pages/*")
+# Debugging
+# Make sure to comment this when running for real
 number_pages = 4
+
+#os.system("rm -fr pages/*")
 
 for current_page in range(1, number_pages + 1):
     next_page(current_page)
