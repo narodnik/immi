@@ -1,32 +1,45 @@
 from bs4 import BeautifulSoup as bs
 import pandas as pd
 import re
+import os
+
+files_list = []
+file_path = "./pages/"
+for root, directories, files in os.walk(file_path):
+    for name in files:
+        files_list.append(os.path.join(root, name))
+
+print(f"Parsing the data from the webpage . . .")
 
 tag_info = []
-filename = 'pages/1.html'
-with open(filename, 'r') as f:
-    soup = bs(f, "html.parser")
-    tags = soup.find_all('td')
-    for content in tags:
-        page = content.text
-        tag_info.append(page)
+for each_file in files_list[:1]:
+    with open(each_file, 'r') as f:
+        soup = bs(f, "html.parser")
+        tags = soup.find_all('td')
+        for content in tags:
+            page = content.text
+            tag_info.append(page)
 
 imei = []
 for each_item in tag_info:
     edited_item = each_item.strip()
     imei.append(edited_item)
 
-
-lst_final = []
+lst = []
 char = '\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t'
 for x in imei:
     if char in x:
         item = re.sub(char, ", ", x)
-        lst_final.append(item)
+        lst.append(item)
     else:
-        lst_final.append(x)
+        lst.append(x)
 
-colnames = ['IMEI','BRAND','MODELS',]
+lst_final = []
+for item in lst:
+    if item != '':
+        lst_final.append(item)
+
+colnames = ['IMEI','BRAND','MODELS']
 df = pd.DataFrame(lst_final, columns=['col'])
 df.index = [df.index // len(colnames), df.index % len(colnames)]
 df = df['col'].unstack()
