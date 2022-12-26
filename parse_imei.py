@@ -1,10 +1,10 @@
-from bs4 import BeautifulSoup
-html_src = open("pages/1.html").read()
-soup = BeautifulSoup(html_src, "html.parser")
+from bs4 import BeautifulSoup as bs
 
-# Lookup a tag in HTML code:
-#
-#  <section id="section_main" class="mb-4">
-#
-print(soup.section["section_main"])
+# get model number
 
+filename = 'pages/1.html'
+with open(filename, 'r') as f:
+    soup = bs(f, "html.parser")
+    s = soup.find_all("ul", class_="list-unstyled mb-0")
+    for model in s:
+        print(model.text)
