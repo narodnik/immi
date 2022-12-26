@@ -1,28 +1,35 @@
 from bs4 import BeautifulSoup as bs
+import pandas as pd
+import re
 
-# get model number
+tag_info = []
 filename = 'pages/1.html'
 with open(filename, 'r') as f:
     soup = bs(f, "html.parser")
-    s = soup.find_all("ul", class_="list-unstyled mb-0")
-    for model in s:
-        print(model.text)
+    tags = soup.find_all('td')
+    for content in tags:
+        page = content.text
+        tag_info.append(page)
 
-# get model names, numbers and IMEI
 imei = []
-filename = 'pages/1.html'
-with open(filename, 'r') as f:
-    soup = bs(f, "html.parser")
-    s3 = soup.find_all('td')
-    for content in s3:
-        imei_page1 = content.text
-        # print(imei_page1)
-        imei.append(imei_page1)
-# print(imei)
-    new_imei = []
-    for each_item in imei:
-        new_item = each_item.strip()
-        new_imei.append(new_item)
-        #print(new_item)
+for each_item in tag_info:
+    edited_item = each_item.strip()
+    imei.append(edited_item)
 
-print(new_imei[0])
+
+lst_final = []
+char = '\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\n\n\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t'
+for x in imei:
+    if char in x:
+        item = re.sub(char, ", ", x)
+        lst_final.append(item)
+    else:
+        lst_final.append(x)
+
+colnames = ['IMEI','BRAND','MODELS',]
+df = pd.DataFrame(lst_final, columns=['col'])
+df.index = [df.index // len(colnames), df.index % len(colnames)]
+df = df['col'].unstack()
+df.columns = colnames
+
+df.to_csv("test.csv")
