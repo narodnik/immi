@@ -31,5 +31,8 @@ df = pd.DataFrame(lst_final, columns=['col'])
 df.index = [df.index // len(colnames), df.index % len(colnames)]
 df = df['col'].unstack()
 df.columns = colnames
+srt_df = df.sort_values(by = 'BRAND')
+name = 'imei_sheet.csv'
+srt_df.to_csv(name)
 
-df.to_csv("test.csv")
+print(f"The content was parsed and exported to {name}.")
